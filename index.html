@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>U1 Lesson A · Dive into Hainan FTP — Course Map</title>
+<style>
+  :root{
+    --bg:#FFF8F3; --ink:#1A1A1A; --muted:#6B7280;
+    --orange:#F97316; --pink:#EC4899; --grad:linear-gradient(135deg,#F97316 0%,#EC4899 100%);
+    --card:#FFFFFF; --line:rgba(249,115,22,.28);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--ink);}
+
+  header{padding:26px 48px 20px;}
+  header h1{font-size:26px;}
+  header h1 em{font-style:normal; background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  header p{margin-top:6px; color:var(--muted); font-size:14px;}
+
+  main{max-width:1200px; margin:0 auto; padding:0 48px 60px;}
+
+  /* ---- top: goal card ---- */
+  .goal{background:var(--grad); border-radius:18px; color:#fff; padding:26px 30px; box-shadow:0 8px 24px rgba(236,72,153,.25); margin-bottom:34px;}
+  .goal .tag{display:inline-block; background:rgba(255,255,255,.22); padding:4px 14px; border-radius:999px; font-size:12px; letter-spacing:2px; margin-bottom:10px;}
+  .goal h2{font-size:21px; line-height:1.35;}
+  .goal ol{margin:14px 0 0 0; padding-left:24px; display:flex; flex-direction:column; gap:8px;}
+  .goal ol li{font-size:15px; line-height:1.6; opacity:.97;}
+  .goal ol li b{color:#FFE1B8;}
+  .goal .ult{margin-top:16px; background:rgba(255,255,255,.94); color:#B4430E; border-radius:14px; padding:14px 18px; font-size:16px; font-weight:700; line-height:1.5; box-shadow:0 4px 14px rgba(0,0,0,.08);}
+  .goal .ult .st{font-size:20px; margin-right:8px;}
+
+  /* ---- section goal box ---- */
+  .sgoal{margin-top:10px; background:rgba(249,115,22,.08); border-left:4px solid var(--orange); border-radius:0 10px 10px 0; padding:10px 14px; font-size:13.5px; line-height:1.6; color:#7A4A1E;}
+  .sgoal b{color:var(--orange);}
+  .sgoal .st{font-weight:700; margin-right:6px;}
+
+  /* ---- mind-map spine ---- */
+  .spine{position:relative; padding-left:74px;}
+  .spine::before{content:""; position:absolute; left:29px; top:30px; bottom:30px; width:4px; border-radius:2px; background:var(--grad); opacity:.35;}
+
+  .branch{position:relative; margin-bottom:34px;}
+  .node{position:absolute; left:-74px; top:0; width:62px; height:62px; border-radius:18px; background:var(--grad); color:#fff; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:800; box-shadow:0 6px 16px rgba(236,72,153,.3);}
+  .branch-card{background:var(--card); border:1px solid var(--line); border-radius:20px; overflow:hidden; box-shadow:0 4px 18px rgba(249,115,22,.08);}
+  .branch-head{padding:20px 26px 14px;}
+  .branch-head h3{font-size:21px;}
+  .branch-head .flow{margin-top:8px; font-size:14px; color:var(--muted); line-height:1.6;}
+  .branch-head .flow b{color:var(--orange);}
+  .branch-head .flow .arr{color:var(--pink); font-weight:800; margin:0 6px;}
+
+  /* ---- slide strip ---- */
+  .strip-wrap{position:relative; padding:4px 26px 24px;}
+  .strip{display:flex; gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:10px; scrollbar-width:thin; scrollbar-color:var(--orange) rgba(249,115,22,.15);}
+  .strip::-webkit-scrollbar{height:8px;}
+  .strip::-webkit-scrollbar-track{background:rgba(249,115,22,.12); border-radius:999px;}
+  .strip::-webkit-scrollbar-thumb{background:var(--orange); border-radius:999px;}
+  .shot{flex:0 0 auto; width:330px; scroll-snap-align:start; border-radius:12px; overflow:hidden; border:1px solid var(--line); cursor:zoom-in; background:#fff; transition:.25s; position:relative;}
+  .shot:hover{transform:translateY(-3px); box-shadow:0 10px 24px rgba(249,115,22,.18);}
+  .shot img{width:100%; display:block;}
+  .shot .no{position:absolute; top:8px; left:8px; background:rgba(26,26,26,.65); color:#fff; font-size:11px; padding:3px 9px; border-radius:999px;}
+  .shot .cap{padding:8px 12px; font-size:12.5px; color:var(--muted); border-top:1px solid rgba(249,115,22,.15); background:rgba(249,115,22,.04);}
+  .hint{font-size:12.5px; color:var(--muted); text-align:right; padding:0 26px; margin-top:-6px;}
+  .nav{position:absolute; top:50%; transform:translateY(-50%); width:40px; height:40px; border-radius:50%; border:none; background:var(--grad); color:#fff; font-size:17px; cursor:pointer; box-shadow:0 4px 12px rgba(236,72,153,.35); z-index:5;}
+  .nav:hover{transform:translateY(-50%) scale(1.08);}
+  .nav.prev{left:8px;} .nav.next{right:8px;}
+
+  footer{text-align:center; padding:18px; font-size:12px; color:var(--muted);}
+
+  /* ---- lightbox ---- */
+  .lb{position:fixed; inset:0; background:rgba(26,26,26,.78); display:none; align-items:center; justify-content:center; z-index:50; cursor:zoom-out; padding:30px;}
+  .lb.show{display:flex;}
+  .lb img{max-width:96vw; max-height:92vh; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,.5);}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🗺️ Course Map · <em>UNIT 1 Lesson A: Dive into Hainan FTP</em></h1>
+</header>
+
+<main>
+
+  <!-- GOAL -->
+  <div class="goal">
+    <span class="tag">TEACHING OBJECTIVES</span>
+    <h2>By the end of this lesson, students will be able to:</h2>
+    <ol>
+      <li><b>understand</b> the history, development, and key features of the Hainan FTP;</li>
+      <li><b>acquire</b> key vocabulary related to the Hainan FTP;</li>
+      <li><b>introduce</b> the Hainan FTP in English.</li>
+    </ol>
+    <div class="ult"><span class="st">⭐</span>Final Goal: Students will learn <u>how to introduce a Free Trade Port</u>.</div>
+  </div>
+
+  <!-- SPINE -->
+  <div class="spine">
+
+    <!-- 1 WARM UP : PPT 3-8 -->
+    <div class="branch">
+      <div class="node">1</div>
+      <div class="branch-card">
+        <div class="branch-head">
+          <h3>Warm Up · Video Time 🎬</h3>
+          <div class="flow">Watch a video → fill in the blanks → grasp the main idea → <b>retell</b> it<br>
+          Four aspects: <b>Geography</b><span class="arr">→</span><b>Policy</b><span class="arr">→</span><b>Industry</b><span class="arr">→</span><b>Advantages</b></div>
+          <div class="sgoal"><span class="st">🎯</span><b>Section goal:</b> use these four key points to form a <b>short introduction to the Hainan FTP</b>.</div>
+        </div>
+        <div class="strip-wrap">
+          <button class="nav prev" onclick="slide('strip1',-1)">‹</button>
+          <div class="strip" id="strip1">
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 3</span><img src="assets/w03.png" alt=""><div class="cap">Viewing for Comprehension · watch &amp; fill in the blanks</div></div>
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 4</span><img src="assets/w04.png" alt=""><div class="cap">Part 1 Geography · 34,000 km², the largest FTP by area</div></div>
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 5</span><img src="assets/w05.png" alt=""><div class="cap">Part 2 Policy · low tax, dual 15% caps, negative list, EF account</div></div>
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 6</span><img src="assets/w06.png" alt=""><div class="cap">Part 3 Industry &amp; Part 4 Advantages · four leading industries</div></div>
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 7</span><img src="assets/w07.png" alt=""><div class="cap">Task 2 Retelling · fill in the blanks to retell the video</div></div>
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 8</span><img src="assets/w08.png" alt=""><div class="cap">Retelling · check the answers with the word bank</div></div>
+          </div>
+          <button class="nav next" onclick="slide('strip1',1)">›</button>
+        </div>
+        <div class="hint">← 滑动查看本环节全部 6 页 · click a slide to zoom →</div>
+      </div>
+    </div>
+
+    <!-- 2 TEXT LEARNING : PPT 9-21 -->
+    <div class="branch">
+      <div class="node">2</div>
+      <div class="branch-card">
+        <div class="branch-head">
+          <h3>Text Learning · Four Tasks 📖</h3>
+          <div class="flow"><b>① Vocabulary</b> (two games)<span class="arr">→</span><b>② Listening</b> (CET-4 practice &amp; tips)<span class="arr">→</span><b>③ Read &amp; translate</b> (final-exam items)<span class="arr">→</span><b>④ Retell the text</b></div>
+          <div class="sgoal"><span class="st">🎯</span><b>Section goals:</b> ① understand the history, development, and key features of the Hainan FTP; ② acquire key vocabulary related to the Hainan FTP; ③ briefly introduce <b>the development and future</b> of the Hainan FTP based on the given information.</div>
+        </div>
+        <div class="strip-wrap">
+          <button class="nav prev" onclick="slide('strip2',-1)">‹</button>
+          <div class="strip" id="strip2">
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 9</span><img src="assets/t09.png" alt=""><div class="cap">Task 1 Words &amp; Expressions · 12 key words</div></div>
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 10</span><img src="assets/t10.png" alt=""><div class="cap">Task 2 Matching · match each word with its meaning</div></div>
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 11</span><img src="assets/t11.png" alt=""><div class="cap">Task 3 Listening · CET-4 style multiple-choice questions</div></div>
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 12</span><img src="assets/t12.png" alt=""><div class="cap">Task 3 Answers · Q1–Q3 with key points</div></div>
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 13</span><img src="assets/t13.png" alt=""><div class="cap">Task 3 Answers · Q4–Q6 with key points</div></div>
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 14</span><img src="assets/t14.png" alt=""><div class="cap">Reading &amp; Translation · script part 1 (read aloud in class)</div></div>
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 15</span><img src="assets/t15.png" alt=""><div class="cap">Reading &amp; Translation · script part 2</div></div>
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 16</span><img src="assets/t16.png" alt=""><div class="cap">Summary · timeline of the Hainan FTP (1988)</div></div>
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 17</span><img src="assets/t17.png" alt=""><div class="cap">Timeline · 1988: became China's largest special economic zone</div></div>
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 18</span><img src="assets/t18.png" alt=""><div class="cap">Timeline · 2018 pilot free trade zone announced</div></div>
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 19</span><img src="assets/t19.png" alt=""><div class="cap">Timeline · 2020 Master Plan released</div></div>
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 20</span><img src="assets/t20.png" alt=""><div class="cap">Timeline · 2025: island-wide special customs operations launched</div></div>
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 21</span><img src="assets/t21.png" alt=""><div class="cap">Timeline · future: a world-class free trade port</div></div>
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 22</span><img src="assets/t22.png" alt=""><div class="cap">Oral Presentation · retell the FTP story with the 12-word bank</div></div>
+          </div>
+          <button class="nav next" onclick="slide('strip2',1)">›</button>
+        </div>
+        <div class="hint">← 滑动查看本环节全部 14 页 · click a slide to zoom →</div>
+      </div>
+    </div>
+
+    <!-- 3 GLOBAL VISION : PPT 23-24 -->
+    <div class="branch">
+      <div class="node">3</div>
+      <div class="branch-card">
+        <div class="branch-head">
+          <h3>Global Vision · Case Study 🌍</h3>
+          <div class="flow">Compare three hubs — <b>Dubai</b> · <b>Singapore</b> · <b>Hainan</b> — then give a <b>1-minute FTP introduction</b> as a Youth Ambassador 🎤</div>
+          <div class="sgoal"><span class="st">🎯</span><b>Section goals:</b> ① learn about <b>free trade zones or free trade ports</b> in different places; ② give a <b>brief introduction</b> to each place based on the given information.</div>
+        </div>
+        <div class="strip-wrap">
+          <button class="nav prev" onclick="slide('strip3',-1)">‹</button>
+          <div class="strip" id="strip3">
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 23</span><img src="assets/g23.png" alt=""><div class="cap">Critical Thinking · group case study: Dubai / Singapore / Hainan</div></div>
+            <div class="shot" onclick="lb(this)"><span class="no">PPT 24</span><img src="assets/g24.png" alt=""><div class="cap">Online resource · case-reading webpage link</div></div>
+          </div>
+          <button class="nav next" onclick="slide('strip3',1)">›</button>
+        </div>
+        <div class="hint">← 滑动查看本环节全部 2 页 · click a slide to zoom →</div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div class="lb" id="lb" onclick="this.classList.remove('show')"><img id="lbImg" alt=""></div>
+<footer>U1 Lesson A · Dive into Hainan FTP · Course Map for open-class presentation</footer>
+
+<script>
+function lb(shot){
+  document.getElementById('lbImg').src = shot.querySelector('img').src;
+  document.getElementById('lb').classList.add('show');
+}
+function slide(id, dir){
+  const s = document.getElementById(id);
+  const w = s.querySelector('.shot').offsetWidth + 14;
+  s.scrollBy({left: dir*w*2, behavior:'smooth'});
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') document.getElementById('lb').classList.remove('show'); });
+</script>
+</body>
+</html>
